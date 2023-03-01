@@ -41,37 +41,27 @@ public class ArrayProblems {
         Arrays.sort(arrayTwo);
         int n = arrayOne.length,m = arrayTwo.length;
         int[] output = new int[2];
-        int diff = -1,min_diff=Integer.MAX_VALUE;
-        int k1 = 0,k2=0;
-        System.out.println(Arrays.toString(arrayTwo));
-        //[-1, 5, 10, 20, 28, 3],[26, 134, 135, 15, 17]
-        if(arrayTwo[0]<arrayOne[0]) {
-            while (arrayTwo[k1] < arrayOne[0]&&k1<Math.min(n,m)){
-                k1++;
-            diff = Math.abs(arrayOne[0]-arrayTwo[k1]);
-                System.out.println(diff);
-
-                if(min_diff>diff) {
-                min_diff = diff;
-                output = new int[]{arrayOne[k1], arrayTwo[0]};
+        int diff=0,min_diff=Integer.MAX_VALUE;
+        int first=0,second=0;
+        while(first<n&&second<m){
+            int firstNum=arrayOne[first];
+            int secondNum=arrayTwo[second];
+            if(firstNum<secondNum){
+                diff = secondNum-firstNum;
+                first++;
+            }else if(firstNum==secondNum){
+                return new int[]{firstNum,secondNum};
+            }else {
+                diff = firstNum - secondNum;
+                second++;
             }
+            if(min_diff>diff){
+                min_diff=diff;
+                output[0]=firstNum;
+                output[1]=secondNum;
             }
 
-        }else if(arrayTwo[0]>arrayOne[0]) {
-            while (k2 < Math.min(n, m) && (arrayTwo[k2] > arrayOne[0]) ){
-
-                diff = Math.abs(arrayOne[0] - arrayTwo[k2]);
-                if (min_diff > diff) {
-                    System.out.println("HI1");
-
-                    min_diff = diff;
-                    output = new int[]{arrayOne[0], arrayTwo[k2]};
-                }
-                k2++;
-
-            }
         }
-
         return output;
     }
 
