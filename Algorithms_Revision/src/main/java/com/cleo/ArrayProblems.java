@@ -1,10 +1,27 @@
 package com.cleo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ArrayProblems {
+
+    public static int[] arrayOfProducts(int[] array) {
+        // Write your code here.
+        int left=1,right=1;
+        int[] output = new int[array.length];
+        Arrays.fill(output,1);
+        for (int i = 0; i < array.length; i++) {
+            output[i]=left;
+            left*=array[i];
+        }
+        for (int i = array.length-1; i >=0 ; i--) {
+            output[i]*=right;
+            right*=array[i];
+
+
+        }
+
+        return output;
+    }
     public static List<Integer[]> threeNumberSum(int[] array, int targetSum) {
         // Write your code here.
         int first=0;
@@ -71,5 +88,6 @@ public class ArrayProblems {
         int target = 0;
         System.out.println(threeNumberSum(array,target));
         System.out.println(Arrays.toString(smallestDifference(array,array2)));
+        System.out.println(Arrays.toString(arrayOfProducts(array)));
     }
 }
