@@ -1,9 +1,6 @@
 package com.cleo;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class TreeProblems {
 
@@ -17,6 +14,19 @@ public class TreeProblems {
         }
 
         public DepthPair() {
+        }
+    }
+
+    static class TreeState{
+        int diameter;
+        int height;
+
+        public TreeState(int diameter, int height) {
+            this.diameter = diameter;
+            this.height = height;
+        }
+
+        public TreeState() {
         }
     }
     public static class BinaryTree {
@@ -131,6 +141,117 @@ public class TreeProblems {
         branchSums(root,0,temp);
         return temp;
     }
+
+    public static int binaryTreeDiameter(BinaryTree root) {
+        // Write your code here.
+        if(root==null)
+            return 0;
+
+        return diameterUtil(root).diameter;
+
+    }
+    public static TreeState diameterUtil(BinaryTree root){
+        if(root==null){
+            return new TreeState(0,0);
+        }
+        TreeState leftTreeState = diameterUtil(root.left);
+        TreeState rightTreeState = diameterUtil(root.right);
+        System.out.print(leftTreeState.height+":"+rightTreeState.height+"\t");
+
+
+        System.out.println(leftTreeState.diameter+":"+rightTreeState.diameter);
+
+        int longestPathThroughRoot = leftTreeState.height+rightTreeState.height;
+        int maxDiameterSoFar = Math.max(leftTreeState.diameter,rightTreeState.diameter);
+        int currentDiameter = Math.max(longestPathThroughRoot,maxDiameterSoFar);
+        int currentHeight = 1+Math.max(leftTreeState.height,rightTreeState.height);
+
+        return new TreeState(currentDiameter,currentHeight);
+
+    }
+
+
+
+    /**
+     *
+     * @param tree Given Binary Tree
+     * @param target And a target Value
+     * @param k Distance
+     * @return All Nodes that are at distance k from the node
+     */
+    public static ArrayList<Integer> findNodesDistanceK(BinaryTree tree, int target, int k) {
+        // Write your code here.
+        ArrayList<Integer> outputNodes = new ArrayList<>();
+        Map<Integer,BinaryTree> targetParents = new HashMap<>();
+       // targetParents.put(tree,null);
+        populateParents(tree,null,targetParents);
+        for(var e:targetParents.entrySet()){
+            if(e.getValue()==null)
+                System.out.println(e.getKey()+":null");
+            else
+                System.out.println(e.getKey()+":"+e.getValue().value);
+        }
+        BinaryTree targetNode=getTargetNode(tree,target,targetParents);
+
+        Queue<DepthPair> queue = new LinkedList<>();
+        queue.offer(new DepthPair(targetNode,0));
+        Set<Integer> seen = new HashSet<>();
+        seen.add(targetNode.value);
+        int distance=0;
+        while(queue.size()>0){
+            DepthPair current=queue.poll();
+            BinaryTree node=current.node;
+            int curr_distance = current.depth;
+
+
+
+            if(curr_distance==k){
+                for(var output:queue){
+                    outputNodes.add(output.node.value);
+                }
+                outputNodes.add(node.value);
+                return outputNodes;
+            }
+            if(curr_distance>k)
+                break;
+
+
+            List<BinaryTree> connectedNodes = Arrays.asList(node.left,node.right,targetParents.get(node.value));
+            for(BinaryTree connection:connectedNodes){
+                if(connection==null)
+                    continue;
+                if(seen.contains(connection.value))
+                    continue;
+                seen.add(connection.value);
+                queue.add(new DepthPair(connection,curr_distance+1));
+            }
+
+
+        }
+        return new ArrayList<>();
+    }
+
+    public static BinaryTree getTargetNode(BinaryTree root,int target,Map<Integer,BinaryTree> parents){
+        if(root.value==target)
+            return root;
+       BinaryTree parent = parents.get(target);
+        System.out.println(parent.value);
+       if(parent.left!=null&&parent.left.value==target)
+           return parent.left;
+       return parent.right;
+
+    }
+
+    public static void populateParents(BinaryTree root,BinaryTree current,Map<Integer,BinaryTree> targetParents){
+        if(root!=null){
+            targetParents.put(root.value,current);
+            populateParents(root.left,root,targetParents);
+            populateParents(root.right,root,targetParents);
+        }
+
+
+    }
+
     public static void main(String[] args) {
         BinaryTree root = new BinaryTree(10);
         insert(root,8);
@@ -147,6 +268,13 @@ public class TreeProblems {
         invertBinaryTree(root);
         System.out.println();
         inOrder(root);
+        System.out.println();
+        System.out.println("Diameter:"+binaryTreeDiameter(root));
+       List<Integer> nodes = findNodesDistanceK(root,8,1);
+        System.out.println("Nodes at distance k:");
+       for(int node:nodes){
+           System.out.print(node+" ");
+       }
 
 
     }
