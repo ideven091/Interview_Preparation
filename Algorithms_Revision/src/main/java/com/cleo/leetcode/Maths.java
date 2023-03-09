@@ -51,6 +51,14 @@ public class Maths {
 
     }
 
+    public String countAndSay(int n) {
+        if(n==1)
+            return "1";
+
+        return null;
+
+    }
+
     public static void main(String[] args) {
         Maths maths = new Maths();
         int[] vals = {2,4,11};
