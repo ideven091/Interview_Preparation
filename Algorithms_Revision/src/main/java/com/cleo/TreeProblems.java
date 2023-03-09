@@ -252,6 +252,40 @@ public class TreeProblems {
 
     }
 
+
+    public static BinaryTree mergeBinaryTrees(BinaryTree tree1, BinaryTree tree2) {
+        // Write your code here.
+        if(tree1==null&&tree2==null)
+            return null;
+        if(tree2==null)
+            return tree1;
+        if(tree1==null)
+            return tree2;
+        tree1.value+=tree2.value;
+        tree1.left=mergeBinaryTrees(tree1.left,tree2.left);
+        tree1.right=mergeBinaryTrees(tree1.right,tree2.right);
+        return tree1;
+    }
+
+    public static int height(BinaryTree root){
+        if(root==null)
+            return 0;
+        int left = height(root.left);
+        int right = height(root.right);
+        if(left<0||right<0||Math.abs(left-right)>1)
+            return -1;
+        return 1+Math.max(left,right);
+    }
+    public static boolean heightBalancedBinaryTree(BinaryTree tree) {
+        // Write your code here.
+        if(tree==null)
+            return true;
+       return height(tree)>=0;
+    }
+    public boolean symmetricalTree(BinaryTree tree) {
+        // Write your code here.
+        return false;
+    }
     public static void main(String[] args) {
         BinaryTree root = new BinaryTree(10);
         insert(root,8);
@@ -261,6 +295,7 @@ public class TreeProblems {
         insert(root,9);
         inOrder(root);
         System.out.println(branchSums(root));
+        System.out.println("Height of Tree:"+ height(root));
         System.out.println(nodeDepths(root));
         invertBinaryTree(root);
         System.out.println();
@@ -275,7 +310,19 @@ public class TreeProblems {
        for(int node:nodes){
            System.out.print(node+" ");
        }
+        System.out.println();
+       BinaryTree root2= new BinaryTree(15);
+       insert(root2,20);
+       insert(root2,8);
+       insert(root2,25);
+        insert(root2,30);
+        insert(root2,35);
+        insert(root2,40);
+       root2=mergeBinaryTrees(root2,root);
+       inOrder(root2);
+        System.out.println("Height of Tree: "+ height(root2));
 
+        System.out.println(heightBalancedBinaryTree(root2));
 
     }
 }
